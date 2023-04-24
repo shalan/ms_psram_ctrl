@@ -7,13 +7,15 @@ PSRAM is a DRAM combined with a self-refresh circuit. It appears externally as s
 - High-Speed Access
 - Low Cost
 
-The controller was designed after [this part](https://www.issi.com/WW/pdf/66-67WVS4M8ALL-BLL.pdf) from ISSI. It utilizes both EBh and 38h commands for reading and writing.
+The controller was designed after [this part](https://www.issi.com/WW/pdf/66-67WVS4M8ALL-BLL.pdf) from ISSI. It utilizes both quad I/O EBh and 38h commands only for reading and writing.
+
+The controller is very small in size. It is synthesized to less than 500 cells.
 
 ## Performance
 The controller supports quad I/O SPI interface. However better than the classical serial SPI, reading and writing require several cycles depending the amount of data being read or written. Moreover, data reads are slower than data writes. Hence using PSRAM as the data memory in embedded applications slows down the system. Typically, a smaller (mor expensive) internal SRAM is used for frequent data objects and the large slow PSRAM is used for less frequent data objects. 
 The following table shows how the execution times of some common kernels are impacted by using only external PSRAM vs. using only internal SRAM.
 
-| kernel | SRAM Execution Time (usec) | PSRAM Execution Time (usec) | Slow Down |
+| kernel | PSRAM Execution Time (usec) | Internal SRAM Execution Time (usec) | Ratio |
 | ------ | -------------------------- | --------------------------- | --------- | 
 | xtea | 840 | 446 | 3.94 | 
 | stress   | 1607 | 446  | 3.6|
