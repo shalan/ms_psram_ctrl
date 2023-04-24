@@ -42,7 +42,7 @@
 `default_nettype        none
 
 // Using EBH Command
-module AHB_PSRAM_CTRL (
+module ms_psram_ctrl_ahb (
     // AHB-Lite Slave Interface
     input   wire            HCLK,
     input   wire            HRESETn,
