@@ -20,7 +20,7 @@ module ms_psram_ctrl_ahb_tb;
 
     `include "AHB_tasks.vh"
 
-    AHB_PSRAM_CTRL psram_ctrl(
+    ms_psram_ctrl_ahb psram_ctrl(
         // AHB-Lite Slave Interface
         .HCLK(HCLK),
         .HRESETn(HRESETn),
