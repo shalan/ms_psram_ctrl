@@ -1,4 +1,4 @@
-# ms_psram_ctrl_ahb
+# ms_psram_ctrl
 
 A Quad I/O SPI Pseudo Static RAM (PSRAM) Controller.
 PSRAM is a DRAM combined with a self-refresh circuit. It appears externally as slower SRAM, albeit with a density/cost advantage over true SRAM, and without the access complexity of DRAM. PSRAM chips have many advantages that makes them very good for IoT applications.
@@ -9,7 +9,9 @@ PSRAM is a DRAM combined with a self-refresh circuit. It appears externally as s
 
 The controller was designed after [this part](https://www.issi.com/WW/pdf/66-67WVS4M8ALL-BLL.pdf) from ISSI. It utilizes both quad I/O EBh and 38h commands only for reading and writing.
 
-The controller is very small in size. It is synthesized to less than 500 cells.
+The controller comes with two versions for both AHB and Wishbone (classical) buses.
+
+The controller is very small in size. It is synthesized to around 500 cells.
 
 ## Performance
 The controller supports quad I/O SPI interface. However better than the classical serial SPI, reading and writing require several cycles depending the amount of data being read or written. Moreover, data reads are slower than data writes. Hence using PSRAM as the data memory in embedded applications slows down the system. Typically, a smaller (mor expensive) internal SRAM is used for frequent data objects and the large slow PSRAM is used for less frequent data objects. 
