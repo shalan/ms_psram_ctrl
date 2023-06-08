@@ -276,7 +276,7 @@ module PSRAM_READER (
     localparam  IDLE = 1'b0, 
                 READ = 1'b1;
 
-    wire [7:0]  FINAL_COUNT = 27;   // Always read 1 word
+    wire [7:0]  FINAL_COUNT = 27 +2;   // Always read 1 word // for waiting for last word
 
     reg         state, nstate;
     reg [7:0]   counter;
@@ -328,7 +328,7 @@ module PSRAM_READER (
             saddr <= {addr[23:2], 2'b0};
 
     // Sample with the negedge of sck
-    wire[7:0] byte_index = counter/2 - 10;
+    wire[7:0] byte_index = counter/2 - 11; // to start from 0
     always @ (posedge clk)
         if(counter >= 20 && counter <= FINAL_COUNT)
             if(sck) 
@@ -376,7 +376,7 @@ module PSRAM_WRITER (
     localparam  IDLE = 1'b0, 
                 READ = 1'b1;
 
-    wire[7:0]        FINAL_COUNT = 13 + size*2;
+    wire[7:0]        FINAL_COUNT = 13 + size*2 +1; // +1 wait for last word
 
     reg         state, nstate;
     reg [7:0]   counter;
