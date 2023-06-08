@@ -127,13 +127,13 @@ module ms_psram_ctrl_wb (
     
     
     wire [7:0]  byte0 = (sel_i[0])          ? dat_i[7:0]   :
-                        (sel_i[1] & size==1)? dat_i[15:9]  :
+                        (sel_i[1] & size==1)? dat_i[15:8]  :
                         (sel_i[2] & size==1)? dat_i[23:16] :
                         (sel_i[3] & size==1)? dat_i[31:24] :
                         (sel_i[2] & size==2)? dat_i[23:16] :
                         dat_i[7:0];
 
-    wire [7:0]  byte1 = (sel_i[1])          ? dat_i[15:9]  :
+    wire [7:0]  byte1 = (sel_i[1])          ? dat_i[15:8]  :
                         dat_i[31:24];
                         
     wire [7:0]  byte2 = dat_i[23:16];
@@ -254,7 +254,7 @@ module ms_psram_ctrl_wb (
     
     assign mw_din = din;
     assign mr_din = din;
-
+    assign ack_o = wb_we ? mw_done :mr_done ;
 endmodule
 
 module PSRAM_READER (
@@ -276,7 +276,7 @@ module PSRAM_READER (
     localparam  IDLE = 1'b0, 
                 READ = 1'b1;
 
-    wire [7:0]  FINAL_COUNT = 27;   // Always read 1 word
+    wire [7:0]  FINAL_COUNT = 27 +2;   // Always read 1 word // for waiting for last word
 
     reg         state, nstate;
     reg [7:0]   counter;
@@ -328,7 +328,7 @@ module PSRAM_READER (
             saddr <= {addr[23:2], 2'b0};
 
     // Sample with the negedge of sck
-    wire[7:0] byte_index = counter/2 - 10;
+    wire[7:0] byte_index = counter/2 - 11; // to start from 0
     always @ (posedge clk)
         if(counter >= 20 && counter <= FINAL_COUNT)
             if(sck) 
@@ -343,7 +343,7 @@ module PSRAM_READER (
                         (counter == 13) ?   saddr[3:0]          :
                         4'h0;    
         
-    assign douten   = (counter < 14);
+    assign douten   = (counter < 14)  & (state != IDLE);
 
     assign done     = (counter == FINAL_COUNT+1);
 
@@ -376,7 +376,7 @@ module PSRAM_WRITER (
     localparam  IDLE = 1'b0, 
                 READ = 1'b1;
 
-    wire[7:0]        FINAL_COUNT = 13 + size*2;
+    wire[7:0]        FINAL_COUNT = 13 + size*2 +1; // +1 wait for last word
 
     reg         state, nstate;
     reg [7:0]   counter;
